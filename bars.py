@@ -9,17 +9,17 @@ def load_data(file_path):
     return parsed_string
 
 
-def get_biggest_bar(data):
-    biggest_bar = max(data['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
+def get_biggest_bar(json_file):
+    biggest_bar = max(json_file['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
     return biggest_bar['properties']['Attributes']['Name']
 
 
-def get_smallest_bar(data):
-    smallest_bar = min(data['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
+def get_smallest_bar(json_file):
+    smallest_bar = min(json_file['features'], key=lambda x: x['properties']['Attributes']['SeatsCount'])
     return smallest_bar['properties']['Attributes']['Name']
 
 
-def get_closest_bar(data, my_longitude, my_latitude):
+def get_closest_bar(json_file, my_longitude, my_latitude):
     my_latitude *= math.pi / 180
     my_longitude *= math.pi / 180
 
@@ -30,7 +30,7 @@ def get_closest_bar(data, my_longitude, my_latitude):
         distance = math.acos(math.sin(my_latitude)*math.sin(latitude) +
                       math.cos(my_latitude)*math.cos(latitude)*math.cos(my_longitude-longitude))
         return distance*earth_radius
-    closest_bar = min(data['features'], key=lambda index: calculation(
+    closest_bar = min(json_file['features'], key=lambda index: calculation(
         index['geometry']['coordinates'][0],
         index['geometry']['coordinates'][1])
                       )
@@ -40,9 +40,9 @@ def get_closest_bar(data, my_longitude, my_latitude):
 if __name__ == '__main__':
     print("Введите путь до файла: ")
     file_path = input()
-    data = load_data(file_path)
-    print('Самый большой бар:', get_biggest_bar(data))
-    print('Самый маленький бар:', get_smallest_bar(data))
+    json_file = load_data(file_path)
+    print('Самый большой бар:', get_biggest_bar(json_file))
+    print('Самый маленький бар:', get_smallest_bar(json_file))
     latitude = float(input("Введите широту вашего текущего местоположения:"))
     longitude = float(input("Введите долготу вашего текущего местоположения:"))
-    print('Ближайший бар:', get_closest_bar(data, longitude, latitude))
+    print('Ближайший бар:', get_closest_bar(json_file, longitude, latitude))
