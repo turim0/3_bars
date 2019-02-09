@@ -7,13 +7,13 @@
 
 Скрипт требует для своей работы установленного интерпретатора Python версии 3.5
 
+JSON должен находится в той же директории, что и bars.py
+
 Запуск на Linux:
 
 ```bash
 
-$ python bars.py # possibly requires call of python3 executive instead of just python
-Введите путь до файла: 
-/home/tour_rv/3_bars/bars.json
+$ python bars.py bars.json # possibly requires call of python3 executive instead of just python
 Самый большой бар: Спорт бар «Красная машина»
 Самый маленький бар: БАР. СОКИ
 Введите широту вашего текущего местоположения: 55.76575836
