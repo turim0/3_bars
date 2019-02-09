@@ -6,13 +6,10 @@ import sys
 
 
 def load_data():
-    if len(sys.argv) == 1 or sys.argv[1] in {'-h', '--help'}:
-        print('Пример использования: {0} + your_file.json'.format(sys.argv[0]))
-        sys.exit()
     with open(sys.argv[1]) as json_file:
         json_string = json_file.read()
         parsed_string = json.loads(json_string)
-    return parsed_string['features']
+        return parsed_string['features']
 
 
 def get_biggest_bar_info(parsed_string):
@@ -48,6 +45,9 @@ def calculation(bar_longitude, bar_latitude):
 
 if __name__ == '__main__':
     try:
+        if len(sys.argv) == 1 or sys.argv[1] in {'-h', '--help'}:
+            print('Usage: {0} + your_file.json'.format(sys.argv[0]))
+            sys.exit()
         parsed_string = load_data()
         print('Самый большой бар:', get_biggest_bar_info(parsed_string))
         print('Самый маленький бар:', get_smallest_bar_info(parsed_string))
