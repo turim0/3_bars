@@ -5,37 +5,37 @@ import sys
 
 def load_data(file_name):
     try:
-        with open(file_name) as json_file:
+        with open(file_name, encoding='utf-8') as json_file:
             json_string = json_file.read()
-            parsed_dict = json.loads(json_string)
-            return parsed_dict['features']
-    except FileNotFoundError as err:
-        print(err)
+            decoded_json = json.loads(json_string)
+            return decoded_json['features']
+    except FileNotFoundError:
+        return None
     except ValueError:
-        print('No JSON object could be decoded')
+        return None
 
 
-def get_biggest_bar(parsed_string):
+def get_biggest_bar(list_of_bars):
     biggest_bar = max(
-        parsed_string,
+        list_of_bars,
         key=lambda x: x['properties']['Attributes']['SeatsCount']
     )
     return biggest_bar
 
 
-def get_smallest_bar(parsed_string):
+def get_smallest_bar(list_of_bars):
     smallest_bar = min(
-        parsed_string,
+        list_of_bars,
         key=lambda x: x['properties']['Attributes']['SeatsCount']
     )
     return smallest_bar
 
 
-def get_closest_bar(parsed_string, my_longitude, my_latitude):
+def get_closest_bar(list_of_bars, my_longitude, my_latitude):
     my_latitude *= math.pi / 180
     my_longitude *= math.pi / 180
     closest_bar = min(
-        parsed_string,
+        list_of_bars,
         key=lambda index: calculate_distance(
             index['geometry']['coordinates'][0],
             index['geometry']['coordinates'][1]
@@ -65,18 +65,21 @@ if __name__ == '__main__':
     if len(sys.argv) == 1 or sys.argv[1] in {'-h', '--help'}:
         print('Usage: {0} + your_file.json'.format(sys.argv[0]))
         sys.exit()
-    parsed_string = load_data(sys.argv[1])
-    bar = get_biggest_bar(parsed_string)
+    if load_data(sys.argv[1]) is None:
+        print('Error: file not found or no json object could be decoded')
+        sys.exit()
+    list_of_bars = load_data(sys.argv[1])
+    bar = get_biggest_bar(list_of_bars)
     bar_name = get_bar_name(bar)
-    print('Самый большой бар:', bar_name)
-    bar = get_smallest_bar(parsed_string)
+    print('The biggest bar:', bar_name)
+    bar = get_smallest_bar(list_of_bars)
     bar_name = get_bar_name(bar)
-    print('Самый маленький бар:', bar_name)
+    print('The smallest:', bar_name)
     try:
-        my_latitude = float(input("Введите широту вашего текущего местоположения:"))
-        my_longitude = float(input("Введите долготу вашего текущего местоположения:"))
-        bar = get_closest_bar(parsed_string, my_longitude, my_latitude)
+        my_latitude = float(input('Input your current latitude:'))
+        my_longitude = float(input('Input your current longitude:'))
+        bar = get_closest_bar(list_of_bars, my_longitude, my_latitude)
         bar_name = get_bar_name(bar)
-        print('Ближайший бар:', get_bar_name(bar))
+        print('The closest bar:', get_bar_name(bar))
     except ValueError as err:
         print(err)
