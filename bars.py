@@ -3,9 +3,9 @@ import math
 import sys
 
 
-def load_data(file):
+def load_data(file_name):
     try:
-        with open(file) as json_file:
+        with open(file_name) as json_file:
             json_string = json_file.read()
             parsed_dict = json.loads(json_string)
             return parsed_dict['features']
