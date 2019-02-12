@@ -9,9 +9,7 @@ def load_data(file_name):
             json_string = json_file.read()
             decoded_json = json.loads(json_string)
             return decoded_json['features']
-    except FileNotFoundError:
-        return None
-    except ValueError:
+    except (FileNotFoundError, ValueError):
         return None
 
 
@@ -65,21 +63,18 @@ if __name__ == '__main__':
     if len(sys.argv) == 1 or sys.argv[1] in {'-h', '--help'}:
         print('Usage: {0} + your_file.json'.format(sys.argv[0]))
         sys.exit()
-    if load_data(sys.argv[1]) is None:
-        print('Error: file not found or no json object could be decoded')
-        sys.exit()
+    list_of_bars = load_data(sys.argv[1])
+    if list_of_bars is None:
+        sys.exit('Error: file not found or no json object could be decoded')
     list_of_bars = load_data(sys.argv[1])
     bar = get_biggest_bar(list_of_bars)
-    bar_name = get_bar_name(bar)
-    print('The biggest bar:', bar_name)
+    print('The biggest bar:', get_bar_name(bar))
     bar = get_smallest_bar(list_of_bars)
-    bar_name = get_bar_name(bar)
-    print('The smallest:', bar_name)
+    print('The smallest:', get_bar_name(bar))
     try:
         my_latitude = float(input('Input your current latitude:'))
         my_longitude = float(input('Input your current longitude:'))
         bar = get_closest_bar(list_of_bars, my_longitude, my_latitude)
-        bar_name = get_bar_name(bar)
         print('The closest bar:', get_bar_name(bar))
     except ValueError as err:
         print(err)
