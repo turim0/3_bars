@@ -66,8 +66,7 @@ if __name__ == '__main__':
     list_of_bars = load_data(sys.argv[1])
     if list_of_bars is None:
         sys.exit('Error: file not found or no json object could be decoded')
-    list_of_bars = load_data(sys.argv[1])
-    bar = get_biggest_bar(list_of_bars)
+        bar = get_biggest_bar(list_of_bars)
     print('The biggest bar:', get_bar_name(bar))
     bar = get_smallest_bar(list_of_bars)
     print('The smallest:', get_bar_name(bar))
